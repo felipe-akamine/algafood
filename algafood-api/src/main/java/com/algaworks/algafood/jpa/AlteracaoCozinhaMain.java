@@ -21,7 +21,7 @@ public class AlteracaoCozinhaMain {
 		cozinha.setId(1L);
 		cozinha.setNome("Americana");
 		
-		cozinhas.adicionar(cozinha);
+		cozinhas.salvar(cozinha);
 		
 	}
 	
