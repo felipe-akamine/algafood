@@ -29,12 +29,12 @@ public class CadastroRestauranteService {
 		
 		restaurante.setCozinha(cozinha);
 		
-		return restauranteRepository.adiciona(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 	
 	public void remover(Long restauranteId) {
 		try {
-			restauranteRepository.remover(restauranteId);
+			restauranteRepository.deleteById(restauranteId);
 		}
 		catch(EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(String
