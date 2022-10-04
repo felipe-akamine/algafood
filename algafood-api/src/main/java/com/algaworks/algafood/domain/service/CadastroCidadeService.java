@@ -17,6 +17,10 @@ import com.algaworks.algafood.domain.repository.EstadoRepository;
 @Service
 public class CadastroCidadeService {
 	
+	private static final String MSG_CIDADE_EM_USO = "Cidade com código %d está em uso";
+
+	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade com código %d não contrada";
+
 	@Autowired
 	EstadoRepository estadoRepository;
 	
@@ -37,16 +41,21 @@ public class CadastroCidadeService {
 		return cidadeRepository.save(cidade);
 	}
 	
-	public void remover(Long cidadeId) {
+	public void excluir(Long cidadeId) {
 		try {
 			cidadeRepository.deleteById(cidadeId);
 		}
 		catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Cidade com código %d não contrada", cidadeId));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
 		}
 		catch(DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Cidade com código %d está em uso", cidadeId));
+			throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
 		}
+	}
+	
+	public Cidade buscarOuFalhar(Long cidadeId) {
+		return cidadeRepository.findById(cidadeId).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
 	}
 	
 }
