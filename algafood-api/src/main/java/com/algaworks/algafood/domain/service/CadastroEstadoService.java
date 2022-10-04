@@ -19,7 +19,7 @@ public class CadastroEstadoService {
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
-	public Estado adiciona(Estado estado) {
+	public Estado salvar(Estado estado) {
 		return estadoRepository.save(estado);
 	}
 	
