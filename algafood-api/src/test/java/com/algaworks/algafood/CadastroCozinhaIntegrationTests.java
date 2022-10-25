@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
@@ -19,7 +21,7 @@ class CadastroCozinhaIntegrationTests {
 	private CadastroCozinhaService cadastroCozinha;
 	
 	@Test
-	public void testarCadastroCozinhaComSucesso() {
+	public void deveCadastrarCozinha_QuandoPassarInformacoesCorretas() {
 		// Cenário
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
@@ -33,7 +35,7 @@ class CadastroCozinhaIntegrationTests {
 	}
 	
 	@Test
-	public void testarCadastroCozinhaSemNome() {
+	public void deveFalhar_QuandoCadastrarCozinhaSemNome() {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 		
@@ -42,5 +44,24 @@ class CadastroCozinhaIntegrationTests {
 		});
 		
 		assertThat(erroEsperado).isNotNull();
+	}
+	
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaEmUso() {
+		
+		EntidadeEmUsoException entidadeEmUsoException = Assertions.assertThrows(EntidadeEmUsoException.class, () -> {
+			cadastroCozinha.excluir(1L);
+		});
+		
+		assertThat(entidadeEmUsoException).isNotNull();
+	}
+	
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaInexistente() {
+		EntidadeNaoEncontradaException entidadeNaoEncontrada = Assertions.assertThrows(EntidadeNaoEncontradaException.class, () -> {
+			cadastroCozinha.excluir(15L);
+		});
+		
+		assertThat(entidadeNaoEncontrada).isNotNull();
 	}
 }
